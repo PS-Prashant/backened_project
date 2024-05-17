@@ -15,3 +15,5 @@
 9- mongoose-aggregate-paginate-v2 -> A cursor based custom aggregate pagination library for Mongoose with customizable labels.
 10- bcrypt -> A library to help you hash passwords.
 11- jsonwebtoken
+12- multer -> library to used upload files on local server ( multer upload files on local server and after that cloudinary upload to the server || this is optional  we wish to skip two step setting  )
+13- fs -> it is nodejs library ( it is already installed with nodejs )
