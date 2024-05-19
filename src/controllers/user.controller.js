@@ -1,7 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/apiError.js";
 import { User } from "../models/user.models.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import uploadOnCloudinary from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/apiResponse.js"
 
 const registerUser = asyncHandler( async ( req, res ) => {
@@ -24,7 +24,7 @@ const registerUser = asyncHandler( async ( req, res ) => {
         throw new ApiError( 400, "All field are required" )
     }
 
-    const existedUser = User.findOne( {
+    const existedUser = await User.findOne( {
         $or: [ { userName }, { email } ]
     } )
 
@@ -33,7 +33,9 @@ const registerUser = asyncHandler( async ( req, res ) => {
     };
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = '';
+    
+    console.log( avatarLocalPath )
+    let coverImageLocalPath = '';
 
     if (  !avatarLocalPath ) throw new ApiError( 400, "Avtar file is required" )
 
@@ -41,22 +43,30 @@ const registerUser = asyncHandler( async ( req, res ) => {
         coverImageLocalPath = req.files?.avatar[0].path;
     }
 
+    console.log( avatarLocalPath, coverImageLocalPath )
+
     const avatarUpload = await uploadOnCloudinary( avatarLocalPath );
     const coverImageUpload = await uploadOnCloudinary( coverImageLocalPath );
+    console.log(11111111111111, avatarUpload);
 
     if ( !avatarUpload ) throw new ApiError( 400, "Avtar is required" )
 
-    const user = User.create({
+    const user = await User.create({
         fullName,
         coverImage: coverImageUpload?.url || "",
         avatar: avatarUpload.url,
         email,
+        password,
         userName: userName.toLowerCase()
     })
+
+    console.log( 3333333333333, user )
 
     const createdUser = await User.findById( user._id ).select(
         "-password -refreshToken"
     )
+
+    console.log( 22222222222222222222, createdUser )
 
     if ( !createdUser ) {
         throw new ApiError( 500, "wrong with registering user" )

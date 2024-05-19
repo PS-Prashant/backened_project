@@ -7,13 +7,13 @@ const router = Router();
 router.route( "/register" ).post( 
     uploadOnMulter.fields([
         {
-            name: "avtar",
+            name: "avatar",
             maxCount: 1
         },
-        {
-            name: "coverImage",
-            maxCount: 1
-        }
+        // {
+        //     name: "coverImage",
+        //     maxCount: 1
+        // }
     ]),
     registerUser )
 
